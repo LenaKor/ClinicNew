@@ -1,0 +1,19 @@
+﻿<Window x:Class="Clinic.Make_Appointment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Clinic"
+        mc:Ignorable="d"
+        Title="Make Appointment"  Height="500" Width="550" Background="Ivory">
+    <Grid>
+        <GroupBox Header="Appointment Info" Margin="5">
+            <StackPanel Margin="10,5,0,0">
+                <CheckBox Content="Make an appointment" Margin="5" Name="chkMakeAppt" />
+                <DatePicker x:Name="dtpAppt"  />
+
+
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>

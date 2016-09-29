@@ -73,7 +73,7 @@ namespace Clinic.ViewModel
             try
             {
                 //Validate credentials through the authentication service
-                User user = _authenticationService.AuthenticateUser(Username, clearTextPassword);
+                ViewModelUser user = _authenticationService.AuthenticateUser(Username, clearTextPassword);
 
                 //Get the current principal object
                 CustomPrincipal customPrincipal = Thread.CurrentPrincipal as CustomPrincipal;
@@ -81,7 +81,7 @@ namespace Clinic.ViewModel
                     throw new ArgumentException("The application's default thread principal must be set to a CustomPrincipal object on startup.");
 
                 //Authenticate the user
-                customPrincipal.Identity = new CustomIdentity(user.UserName, user.UserPass, user.UsersInRoles.Select(r => r.Role.RoleName).ToArray());
+                customPrincipal.Identity = new CustomIdentity(user.Username, user.Pass, user.Roles);
 
                 //Update UI
                 NotifyPropertyChanged("AuthenticatedUser");

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Clinic.DataLayer.DbLayer;
+using Clinic.ViewModel;
 
 namespace Clinic.View
 {
@@ -10,17 +11,22 @@ namespace Clinic.View
     {
         public MainWindow()
         {
+            //InitializeComponent();
+        }
+
+        public MainWindow(ViewModelAuthentication viewModel)
+        {
+            ViewModel = viewModel;
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        #region IView Members
+        public IViewModel ViewModel
         {
-            
-            var dbContext = new ClinicContext();
-            if ()
-            list_all.Show();
-            this.Close();
+            get { return DataContext as IViewModel; }
+            set { DataContext = value; }
         }
+        #endregion
     }
 
 

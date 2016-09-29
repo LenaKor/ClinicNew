@@ -83,12 +83,14 @@
     <Compile Include="Infrastructure\CustomPrincipal.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\IAuthenticationService.cs" />
+    <Compile Include="ViewModel\IViewModel.cs" />
     <Compile Include="ViewModel\ViewModelAuthentication.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLoginWindow.cs" />
     <Compile Include="View\Client_Details.xaml.cs">
       <DependentUpon>Client_Details.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\IView.cs" />
     <Compile Include="View\List_All.xaml.cs">
       <DependentUpon>List_All.xaml</DependentUpon>
     </Compile>

@@ -7,17 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="250" Width="375"
         AllowsTransparency="True" WindowStyle="None" 
-Background="Transparent">
+        Background="Transparent">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+    </Window.Resources>
     <Border CornerRadius="175,175,175,175" Background="Ivory">
-    <Grid>
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="76,90,0,0" Name="textBlock1" FontFamily="Trebuchet MS" Foreground="DarkMagenta" Text="Login"  VerticalAlignment="Top" Width="67"  />
+
+        <Grid>
+            <TextBlock Height="23" HorizontalAlignment="Left" Margin="76,90,0,0" Name="textBlock1" FontFamily="Trebuchet MS" Foreground="DarkMagenta" Text="Login"  VerticalAlignment="Top" Width="67"  />
             <TextBlock Height="23" HorizontalAlignment="Left" Margin="58,120,0,0" Name="textBlock2"  FontFamily="Trebuchet MS" Foreground="DarkMagenta" Text="Password" VerticalAlignment="Top" Width="77"  />
-        <TextBox Height="23" HorizontalAlignment="Left" Margin="135,90,0,0" Name="textBoxEmail"  VerticalAlignment="Top" Width="150" BorderThickness="1" />
-        <PasswordBox Height="23" HorizontalAlignment="Left" Margin="135,120,0,0" Name="passwordBox1" VerticalAlignment="Top" Width="150" />
-            <Button x:Name="button" Content="SignIn" HorizontalAlignment="Left" Margin="122,169,0,0" VerticalAlignment="Top" Width="55" Background="PaleVioletRed" Click="button_Click"/>
+            <TextBox Height="23" HorizontalAlignment="Left" Margin="135,90,0,0" Text="{Binding Username}"  VerticalAlignment="Top" Width="150" BorderThickness="1" />
+            <PasswordBox Height="23" HorizontalAlignment="Left" Margin="135,120,0,0" x:Name="passwordBox" VerticalAlignment="Top" Width="150" />
+            <Button x:Name="button" 
+                    Content="SignIn" 
+                    HorizontalAlignment="Left" 
+                    Margin="122,169,0,0" 
+                    VerticalAlignment="Top" 
+                    Width="55" 
+                    Background="PaleVioletRed" 
+                    Command="{Binding LoginCommand, Mode=OneTime}"
+                    CommandParameter="{Binding ElementName=passwordBox}"/>
             <Button x:Name="button1" Content="Cancel" HorizontalAlignment="Left" Margin="194,169,0,0" VerticalAlignment="Top" Width="55" Background="Tan" />
             <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="90,48,0,0" TextWrapping="Wrap" Text="Please, sign in with your Clinic account" Foreground="Tan" VerticalAlignment="Top"/>
 
         </Grid>
-        </Border>
+    </Border>
 </Window>

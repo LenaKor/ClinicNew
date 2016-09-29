@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Clinic.DataLayer.DbLayer;
 using Clinic.Infrastructure;
+using Clinic.View;
 
 namespace Clinic.ViewModel
 {
-    public class ViewModelAuthentication : ViewModelBase
+    public class ViewModelAuthentication : ViewModelBase, IViewModel
     {
         private readonly IAuthenticationService _authenticationService;
         private readonly DelegateCommand _loginCommand;
@@ -136,10 +137,7 @@ namespace Clinic.ViewModel
             {
                 Status = string.Empty;
                 IView view;
-                if (parameter == null)
-                    view = new SecretWindow();
-                else
-                    view = new AdminWindow();
+                view = new List_All(new ClinicContext());
 
                 view.Show();
             }

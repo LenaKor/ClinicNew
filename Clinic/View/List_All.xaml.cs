@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Clinic.DataLayer.DbLayer;
 
 namespace Clinic.View
 {
@@ -8,8 +9,10 @@ namespace Clinic.View
     /// </summary>
     public partial class List_All : Window
     {
-        public List_All()
+        public new ClinicContext DataContext { get; private set; }
+        public List_All(ClinicContext context)
         {
+            DataContext = context;
             InitializeComponent();
         }
         Client_Details client_details = new Client_Details();

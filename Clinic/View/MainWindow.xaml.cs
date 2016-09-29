@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Clinic.DataLayer.DbLayer;
 
 namespace Clinic.View
 {
@@ -12,9 +13,11 @@ namespace Clinic.View
             InitializeComponent();
         }
 
-        List_All list_all = new List_All();
         private void button_Click(object sender, RoutedEventArgs e)
         {
+            
+            var dbContext = new ClinicContext();
+            if ()
             list_all.Show();
             this.Close();
         }

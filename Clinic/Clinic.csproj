@@ -79,7 +79,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrastructure\CustomIdentity.cs" />
+    <Compile Include="Infrastructure\CustomPrincipal.cs" />
+    <Compile Include="Infrastructure\DelegateCommand.cs" />
+    <Compile Include="Infrastructure\IAuthenticationService.cs" />
+    <Compile Include="ViewModel\ViewModelAuthentication.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="ViewModel\ViewModelLoginWindow.cs" />
     <Compile Include="View\Client_Details.xaml.cs">
       <DependentUpon>Client_Details.xaml</DependentUpon>
     </Compile>
@@ -156,6 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Clinic.DataLayer\Clinic.DataLayer.csproj">
+      <Project>{4cb8ceea-00a4-47e7-9ed6-b0e5d936dd2b}</Project>
+      <Name>Clinic.DataLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

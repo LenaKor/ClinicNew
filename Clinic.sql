@@ -1,9 +1,9 @@
 USE master;
-IF DB_ID('Clinic') IS NOT NULL
-DROP DATABASE Clinic;
-CREATE DATABASE Clinic;
+IF DB_ID('Clinic4') IS NOT NULL
+DROP DATABASE Clinic4;
+CREATE DATABASE Clinic4;
 GO
-USE Clinic;
+USE Clinic4;
 
 ----Roles--------
 IF OBJECT_ID('Roles', 'U') IS NOT NULL
@@ -42,6 +42,26 @@ INSERT INTO Users(UserId, UserName,UserPass)
 VALUES(2, 'doctor', '123');
 SET IDENTITY_INSERT Users OFF;
 GO
+------UsersInRolese--------
+
+IF OBJECT_ID('UsersInRoles', 'U') IS NOT NULL
+DROP TABLE UsersInRoles;
+CREATE TABLE dbo.UsersInRoles
+(
+UserInRolesId int not null IDENTITY(1,1) primary key,
+UserId int not null FOREIGN KEY REFERENCES dbo.Users(UserId),
+RoleId int not null FOREIGN KEY REFERENCES dbo.Roles(RoleId)
+);
+GO
+SET IDENTITY_INSERT UsersInRoles ON;
+INSERT INTO UsersInRoles(UserInRolesId, UserId,RoleId)
+VALUES(1, 1, 1);
+INSERT INTO UsersInRoles(UserInRolesId, UserId,RoleId)
+VALUES(2, 1, 3);
+INSERT INTO UsersInRoles(UserInRolesId, UserId,RoleId)
+VALUES(3, 2, 4);
+SET IDENTITY_INSERT UsersInRoles OFF;
+GO
 ---------Cabinets----------
 IF OBJECT_ID('Cabinets', 'U') IS NOT NULL
 DROP TABLE Cabinets;
@@ -58,27 +78,39 @@ INSERT INTO Cabinets(CabinetId, CabinetNumber)
 VALUES(2, 222);
 SET IDENTITY_INSERT Cabinets OFF;
 GO
-------------Doctors--------
-IF OBJECT_ID('Doctors', 'U') IS NOT NULL
-DROP TABLE Doctors;
-CREATE TABLE dbo.Doctors
+------------Employeers--------
+IF OBJECT_ID('Employeers', 'U') IS NOT NULL
+DROP TABLE Employeers;
+CREATE TABLE dbo.Employeers
 (
-DocId int not null IDENTITY(1,1) primary key,
-DocName VARCHAR(128) NOT NULL,
-DocRank VARCHAR(128),
-CabinetId int not null FOREIGN KEY REFERENCES dbo.Cabinets(CabinetId),
-DocSpecialisation VARCHAR(64) NOT NULL,
+EmpId int not null IDENTITY(1,1) primary key,
+EmpName VARCHAR(128) NOT NULL,
+--DocRank VARCHAR(128),
+UserId int not null FOREIGN KEY REFERENCES dbo.Users(UserId),
+--DocSpecialisation VARCHAR(128) NOT NULL,
 
 );
 GO
-SET IDENTITY_INSERT Doctors ON;
-INSERT INTO Doctors(DocId, DocName,DocRank, CabinetId, DocSpecialisation)
-VALUES( 1,'Ivanov I.I.', 'Professor', 1, 'Plastic Surgeon');
-INSERT INTO Doctors(DocId, DocName,DocRank, CabinetId, DocSpecialisation)
-VALUES( 2,'Than Xao',  'Assistant Nurse', 2, 'Massage Therapist');
-INSERT INTO Doctors(DocId, DocName,DocRank, CabinetId, DocSpecialisation)
-VALUES( 3,'Abrikosov A.A.', 'Head Chief of Medicine', 1, 'Dermogastrotomy');
-SET IDENTITY_INSERT Doctors OFF;
+--SET IDENTITY_INSERT Employeers ON;
+--INSERT INTO Employeers(DocId, DocName,DocRank,  DocSpecialisation)
+--VALUES( 1,'Ivanov I.I.', 'Professor',  'Plastic Surgeon');
+--INSERT INTO Doctors(DocId, DocName,DocRank,  DocSpecialisation)
+--VALUES( 2,'Than Xao', 'Assistant Nurse', 'Massage Therapist');
+--INSERT INTO Doctors(DocId, DocName,DocRank,  DocSpecialisation)
+--VALUES( 3,'Abrikosov A.A.', 'Head Chief of Medicine',  'Dermogastrotomy');
+--SET IDENTITY_INSERT Employeers OFF;
+--GO
+
+------EmployeersIn Cabinets--------
+
+IF OBJECT_ID('EmpInCabinets', 'U') IS NOT NULL
+DROP TABLE EmpInCabinets;
+CREATE TABLE dbo.EmpInCabinets
+(
+EmpInCabinetsId int not null IDENTITY(1,1) primary key,
+EmpId int not null FOREIGN KEY REFERENCES dbo.Employeers(EmpId),
+CabinetId int not null FOREIGN KEY REFERENCES dbo.Cabinets(CabinetId)
+);
 GO
 
 ------------Procedures--------
@@ -87,21 +119,21 @@ DROP TABLE Procedures;
 CREATE TABLE dbo.Procedures
 (
 ProcId int not null IDENTITY(1,1) primary key,
-DocId int not null FOREIGN KEY REFERENCES dbo.Doctors(DocId),
 ProcName VARCHAR(64) NOT NULL,
-DateStart Datetime not null,
-DateFinish Datetime not null,
+ProcDuration Time,
 ProcDescription VARCHAR(128) NOT NULL,
 ProcCost money not null DEFAULT(0),
 );
 GO
 SET IDENTITY_INSERT Procedures ON;
-INSERT INTO Procedures(ProcId, DocId, ProcName, DateStart, DateFinish, ProcDescription,ProcCost)
-VALUES( 1,2,'Massage',  '2016-09-09 10:00:00', '2016-09-09 10:59:00', 'Aroma massage', 55.99);
-INSERT INTO Procedures(ProcId, DocId, ProcName, DateStart, DateFinish, ProcDescription,ProcCost)
-VALUES( 2,2,'Laser Hair Removal',  '2016-09-09 10:00:00', '2016-09-09 10:59:00', 'Affordable laser hair removal for men and women', 10.99);
+INSERT INTO Procedures(ProcId, ProcName, ProcDuration, ProcDescription,ProcCost)
+VALUES( 1,'Massage', '00:30:00', 'Aroma massage', 55.99);
 SET IDENTITY_INSERT Procedures OFF;
 GO
+
+
+
+
 ---------Clients-----------
 IF OBJECT_ID('Clients', 'U') IS NOT NULL
 DROP TABLE Clients;
@@ -144,33 +176,32 @@ VALUES( 11, 'Snezhana', 'Babenko','Sedova vul, bud.1', '1955-02-06', '980-6209',
 SET IDENTITY_INSERT Clients OFF;
 GO
 
----------Schedule-----------
-IF OBJECT_ID('Schedule', 'U') IS NOT NULL
-DROP TABLE Schedule;
-CREATE TABLE dbo.Schedule
+-----------Proc in Cabinets--------
+IF OBJECT_ID('ProcInCabinets', 'U') IS NOT NULL
+DROP TABLE ProcInCabinets;
+CREATE TABLE dbo.ProcInCabinets
 (
-ScheduleId int not null IDENTITY(1,1) primary key,
---DocId int not null FOREIGN KEY REFERENCES dbo.Doctors(DocId),
+ProcInCabId int not null IDENTITY(1,1) primary key,
+ProcId int not null FOREIGN KEY REFERENCES dbo.Procedures(ProcId),
+CabinetId int not null FOREIGN KEY REFERENCES dbo.Cabinets(CabinetId),
+--ClientId int not null FOREIGN KEY REFERENCES dbo.Clients(ClientId),
+--StartTime time,
+--FinishTime time
 
-ScheduleDay VARCHAR(64) NOT NULL,
-ScheduleHour int not null,
-ScheduleMinute int not null
 );
 GO
-SET IDENTITY_INSERT Schedule ON;
-INSERT INTO Schedule(ScheduleId,ScheduleDay, ScheduleHour, ScheduleMinute)
-VALUES( 1,'Monday', 2, 30);
 
-SET IDENTITY_INSERT Schedule OFF;
-GO
----------Appointment-----------
-IF OBJECT_ID('Appointment', 'U') IS NOT NULL
-DROP TABLE Appointment;
-CREATE TABLE dbo.Appointment
+-----------Clients on Procedures--------
+IF OBJECT_ID('ClientOnProc', 'U') IS NOT NULL
+DROP TABLE ClientOnProc;
+CREATE TABLE dbo.ClientOnProc
 (
-AppointmentId int not null IDENTITY(1,1) primary key,
+ClientOnProcId int not null IDENTITY(1,1) primary key,
+ProcId int not null FOREIGN KEY REFERENCES dbo.Procedures(ProcId),
+CabinetId int not null FOREIGN KEY REFERENCES dbo.Cabinets(CabinetId),
 ClientId int not null FOREIGN KEY REFERENCES dbo.Clients(ClientId),
-
+StartTime time,
+FinishTime time
 
 );
 GO

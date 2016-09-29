@@ -13,33 +13,37 @@ namespace Clinic.Infrastructure
     {
         private class InternalUserData
         {
-            public InternalUserData(string username, string pass, string hashedPassword, string[] roles)
+            public InternalUserData(string username, string hashedPassword, string[] roles)
             {
                 Username = username;
-                Pass = pass;
                 HashedPassword = hashedPassword;
                 Roles = roles;
             }
 
             public string Username { get; private set; }
 
-            public string Pass { get; private set; }
 
             public string HashedPassword { get; private set; }
 
             public string[] Roles { get; private set; }
         }
 
-        private static readonly List<InternalUserData> _users = new List<InternalUserData>()
+        private List<InternalUserData> GetUsersFromDb()
         {
-            new InternalUserData("Mark", "mark@company.com",
-                "MB5PYIsbI2YzCUe34Q5ZU2VferIoI4Ttd+ydolWV0OE=", new string[] {"Administrators"}),
-            new InternalUserData("John", "john@company.com",
-                "hMaLizwzOQ5LeOnMuj+C6W75Zl5CXXYbwDSHWW9ZOXc=", new string[] {})
-        };
+            var context = new ClinicContext();
+            var users = context.Users;
+            var InternalUsers = new List<InternalUserData>();
+            foreach (var user in users)
+            {
+                InternalUsers.Add(new InternalUserData(user.UserName, user.UserPass, user.UsersInRoles.Select(r=>r.Role.RoleName).ToArray()));
+            }
+            return InternalUsers;
+        }
+        private static List<InternalUserData> _users;
 
         public ViewModelUser AuthenticateUser(string username, string clearTextPassword)
         {
+            _users = GetUsersFromDb();
             InternalUserData userData = _users.FirstOrDefault(u => u.Username.Equals(username)
                                                                    &&
                                                                    u.HashedPassword.Equals(
@@ -47,7 +51,7 @@ namespace Clinic.Infrastructure
             if (userData == null)
                 throw new UnauthorizedAccessException("Access denied. Please provide some valid credentials.");
 
-            return new ViewModelUser(userData.Username, userData.Pass, userData.Roles);
+            return new ViewModelUser(userData.Username, userData.HashedPassword, userData.Roles);
         }
 
         private string CalculateHash(string clearTextPassword, string salt)

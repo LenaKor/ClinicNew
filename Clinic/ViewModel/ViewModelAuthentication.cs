@@ -91,6 +91,7 @@ namespace Clinic.ViewModel
                 Username = string.Empty; //reset
                 passwordBox.Password = string.Empty; //reset
                 Status = string.Empty;
+                ShowView(customPrincipal.Identity);
             }
             catch (UnauthorizedAccessException)
             {
@@ -133,11 +134,12 @@ namespace Clinic.ViewModel
 
         private void ShowView(object parameter)
         {
+            
             try
             {
                 Status = string.Empty;
                 IView view;
-                view = new List_All(new ClinicContext());
+                view = new List_All(parameter as CustomIdentity);
 
                 view.Show();
             }

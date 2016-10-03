@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using Clinic.DataLayer.DbLayer;
+using Clinic.Infrastructure;
 using Clinic.ViewModel;
 
 namespace Clinic.View
@@ -10,10 +11,12 @@ namespace Clinic.View
     /// </summary>
     public partial class List_All : Window, IView
     {
-        //public new ClinicContext DbClinicContext { get; private set; }
-        public List_All(ClinicContext context)
+        private ClinicContext _dbClinicContext;
+        private CustomIdentity currentUser;
+        public List_All(CustomIdentity currUser)
         {
-            DataContext = context;
+            _dbClinicContext = new ClinicContext();
+            currentUser = currUser;
             InitializeComponent();
         }
         Client_Details client_details = new Client_Details();
